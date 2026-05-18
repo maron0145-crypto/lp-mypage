@@ -13,7 +13,7 @@ const contacts = [
 
 export default function Footer() {
   return (
-    <footer id="contact" className="py-16 md:py-20 px-6 border-t border-gray-100">
+    <footer id="contact" className="py-12 sm:py-16 md:py-20 px-6 border-t border-gray-100">
       <div className="max-w-3xl mx-auto">
         <p className="text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-3">
           Contact

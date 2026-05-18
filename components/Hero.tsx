@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const problems = [
   {
@@ -47,65 +47,109 @@ type Problem = (typeof problems)[number];
 
 function ProblemCard({ p }: { p: Problem }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm h-full">
-      <span className="text-3xl mb-6 block">{p.icon}</span>
-      <p className="text-lg font-semibold text-gray-900 mb-4 leading-snug">{p.title}</p>
-      <p className="text-sm text-gray-500 leading-7">{p.body}</p>
+    <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl h-full flex flex-col">
+      <span className="text-3xl mb-5 sm:mb-6 block">{p.icon}</span>
+      <p className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 leading-snug">
+        {p.title}
+      </p>
+      <p className="text-sm text-gray-500 leading-7 flex-1">{p.body}</p>
     </div>
   );
 }
 
+function circularOffset(i: number, current: number, n: number): number {
+  const mod = ((i - current) % n + n) % n;
+  return mod > n / 2 ? mod - n : mod;
+}
+
+function getCoverflowStyle(offset: number, cardWidth: number): React.CSSProperties {
+  const base: React.CSSProperties = {
+    position: "absolute",
+    left: "50%",
+    top: 0,
+    height: "100%",
+    width: cardWidth,
+    marginLeft: -cardWidth / 2,
+    transition: "transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 500ms ease",
+    transformOrigin: "center center",
+  };
+
+  const abs = Math.abs(offset);
+  const sign = offset === 0 ? 0 : offset > 0 ? 1 : -1;
+  const near = Math.round(cardWidth * 0.75);
+  const far = Math.round(cardWidth * 1.35);
+
+  if (abs === 0) {
+    return {
+      ...base,
+      transform: "translate3d(0, 0, 0) rotateY(0deg) scale(1)",
+      opacity: 1,
+      zIndex: 30,
+    };
+  }
+
+  if (abs === 1) {
+    return {
+      ...base,
+      transform: `translate3d(${sign * near}px, 0, 0) rotateY(${-sign * 40}deg) scale(0.78)`,
+      opacity: 0.7,
+      zIndex: 20,
+      cursor: "pointer",
+    };
+  }
+
+  return {
+    ...base,
+    transform: `translate3d(${sign * far}px, 0, 0) rotateY(${-sign * 65}deg) scale(0.4)`,
+    opacity: 0,
+    zIndex: 0,
+    pointerEvents: "none",
+  };
+}
+
 export default function Hero() {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const isByButton = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [cardWidth, setCardWidth] = useState(320);
+  const touchStartX = useRef(0);
+  const n = problems.length;
 
-  const goTo = (index: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const card = el.children[index] as HTMLElement | undefined;
-    if (!card) return;
+  useEffect(() => {
+    const compute = () => {
+      const w = window.innerWidth;
+      setCardWidth(w < 640 ? Math.min(300, w - 40) : 320);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, []);
 
-    isByButton.current = true;
-    if (timerRef.current) clearTimeout(timerRef.current);
+  const goTo = (index: number) => setCurrent(((index % n) + n) % n);
 
-    el.scrollTo({ left: card.offsetLeft, behavior: "smooth" });
-    setCurrent(index);
-
-    timerRef.current = setTimeout(() => {
-      isByButton.current = false;
-    }, 500);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (isByButton.current) return;
-    const el = e.currentTarget;
-    const cards = Array.from(el.children).slice(0, problems.length) as HTMLElement[];
-    let closest = 0;
-    let minDist = Infinity;
-    cards.forEach((card, i) => {
-      const dist = Math.abs(card.offsetLeft - el.scrollLeft);
-      if (dist < minDist) { minDist = dist; closest = i; }
-    });
-    setCurrent(closest);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 50) goTo(current + 1);
+    else if (diff < -50) goTo(current - 1);
   };
+
+  const coverflowHeight = cardWidth < 300 ? 300 : 320;
 
   return (
     <>
       {/* ── キービジュアル ── */}
       <section
         id="top"
-        className="min-h-screen flex flex-col justify-center bg-[#111827] text-white px-6 py-16 md:py-24"
+        className="flex flex-col justify-center bg-[#111827] text-white px-6 py-12 sm:py-16 md:py-24"
       >
         <div className="max-w-3xl mx-auto w-full">
-          <p className="text-[10px] sm:text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-6">
+          <p className="text-[10px] sm:text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-5 sm:mb-6">
             Business Improvement Engineer
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-snug md:leading-tight mb-8">
-            現場を知るエンジニアが、
-            <br />
-            仕組みで課題を解決する。
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-snug md:leading-tight mb-6 sm:mb-8">
+            現場を知るエンジニアが、仕組みで課題を解決する。
           </h1>
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-8 max-w-xl">
             製造現場での実務経験とエンジニアリングを掛け合わせ、
@@ -113,47 +157,61 @@ export default function Hero() {
           </p>
           <a
             href="#problems"
-            className="mt-12 inline-block text-sm text-gray-500 hover:text-white transition-colors"
+            className="mt-10 sm:mt-12 inline-block text-sm text-gray-500 hover:text-white transition-colors"
           >
             ↓ こんなお悩みありませんか？
           </a>
         </div>
       </section>
 
-      {/* ── お悩みセクション ── */}
-      <section id="problems" className="py-16 md:py-24 px-6 bg-gray-50">
-        <div className="max-w-3xl mx-auto">
+      {/* ── Problems Coverflow ── */}
+      <section id="problems" className="bg-[#111827] text-white py-12 sm:py-16">
+        {/* ヘッダー */}
+        <div className="max-w-3xl mx-auto px-6 w-full mb-8 md:mb-10 text-center">
+          <p className="text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-3">
+            Problems
+          </p>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">
+            こんなお悩みありませんか？
+          </h2>
+        </div>
 
-          {/* ヘッダー */}
-          <div className="mb-8 md:mb-10">
-            <p className="text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-3">
-              Problems
-            </p>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">
-              こんなお悩みありませんか？
-            </h2>
-          </div>
-
-          {/* モバイル: カルーセル */}
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="md:hidden relative flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {problems.map((p) => (
+        {/* Coverflow 本体 */}
+        <div
+          className="relative w-full isolate"
+          style={{
+            perspective: "1200px",
+            transformStyle: "preserve-3d",
+            height: coverflowHeight,
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {problems.map((p, i) => {
+            const offset = circularOffset(i, current, n);
+            return (
               <div
                 key={p.title}
-                className="w-[calc(100%-3rem)] shrink-0 snap-start mr-3"
+                style={getCoverflowStyle(offset, cardWidth)}
+                onClick={() => offset !== 0 && goTo(i)}
               >
                 <ProblemCard p={p} />
               </div>
-            ))}
-            {/* 最終カードを flush-left にするためのスクロール領域延長 */}
-            <div className="w-9 shrink-0" aria-hidden="true" />
-          </div>
+            );
+          })}
+        </div>
 
-          {/* ドット（モバイルのみ） */}
-          <div className="md:hidden flex justify-center gap-2 mt-6">
+        {/* 矢印 + ドット */}
+        <div className="relative z-10 flex items-center justify-center gap-6 mt-8 sm:mt-10">
+          <button
+            onClick={() => goTo(current - 1)}
+            aria-label="前へ"
+            className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center text-gray-400 hover:text-white hover:border-white active:scale-90 transition-all duration-150"
+          >
+            ←
+          </button>
+
+          <div className="flex gap-2">
             {problems.map((_, i) => (
               <button
                 key={i}
@@ -162,24 +220,24 @@ export default function Hero() {
                 className={`h-2 rounded-full transition-all duration-300 ease-out ${
                   i === current
                     ? "w-5 bg-[#2563eb]"
-                    : "w-2 bg-gray-300 hover:bg-gray-400"
+                    : "w-2 bg-gray-600 hover:bg-gray-400"
                 }`}
               />
             ))}
           </div>
 
-          {/* デスクトップ: 2列グリッド */}
-          <div className="hidden md:grid md:grid-cols-2 md:gap-5">
-            {problems.map((p) => (
-              <ProblemCard key={p.title} p={p} />
-            ))}
-          </div>
-
+          <button
+            onClick={() => goTo(current + 1)}
+            aria-label="次へ"
+            className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center text-gray-400 hover:text-white hover:border-white active:scale-90 transition-all duration-150"
+          >
+            →
+          </button>
         </div>
       </section>
 
       {/* ── 解決策セクション ── */}
-      <section className="py-16 md:py-24 px-6">
+      <section className="py-12 sm:py-16 md:py-24 px-6">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-3">
             Solutions
@@ -187,15 +245,17 @@ export default function Hero() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 md:mb-12">
             仕組みで解決します
           </h2>
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {solutions.map((s) => (
-              <div key={s.step} className="flex gap-6 items-start">
-                <span className="font-[family-name:var(--font-dm-sans)] text-3xl font-bold text-gray-100 shrink-0 leading-none">
+              <div key={s.step} className="flex gap-4 sm:gap-6 items-start">
+                <span className="font-[family-name:var(--font-dm-sans)] text-2xl sm:text-3xl font-bold text-gray-100 shrink-0 leading-none">
                   {s.step}
                 </span>
                 <div>
-                  <p className="font-semibold text-gray-900 mb-1">{s.title}</p>
-                  <p className="text-sm text-gray-500 leading-6">{s.body}</p>
+                  <p className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">
+                    {s.title}
+                  </p>
+                  <p className="text-sm text-gray-500 leading-6 sm:leading-7">{s.body}</p>
                 </div>
               </div>
             ))}

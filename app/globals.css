@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* カバーフローの横はみ出しによる水平スクロールを防ぐ */
+html,
+body {
+  overflow-x: hidden;
+}
+
 @theme {
   --color-accent: #2563eb;
   --color-surface: #ffffff;

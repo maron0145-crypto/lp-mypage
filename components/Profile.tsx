@@ -30,7 +30,7 @@ function PhotoPlaceholder() {
 
 export default function Profile() {
   return (
-    <section id="profile" className="py-16 md:py-24 px-6 bg-gray-50">
+    <section id="profile" className="py-12 sm:py-16 md:py-24 px-6 bg-gray-50">
       <div className="max-w-3xl mx-auto">
 
         {/* ── 名刺ブロック: 写真 + 情報の2カラム ── */}

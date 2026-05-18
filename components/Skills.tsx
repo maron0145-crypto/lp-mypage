@@ -59,12 +59,12 @@ function SkillBar({ level }: { level: number }) {
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-16 md:py-24 px-6">
+    <section id="skills" className="py-12 sm:py-16 md:py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <p className="text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-3">
           Skills
         </p>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-10 md:mb-12">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-10 md:mb-12">
           スキル・技術スタック
         </h2>
         <div className="space-y-10 md:space-y-12">
