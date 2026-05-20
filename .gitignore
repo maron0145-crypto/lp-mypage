@@ -16,3 +16,7 @@ tsconfig.tsbuildinfo
 # misc
 .DS_Store
 *.log
+
+# work artifacts
+screenshot-*.png
+screenshot-*.mjs

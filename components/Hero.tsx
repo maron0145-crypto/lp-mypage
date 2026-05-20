@@ -148,12 +148,13 @@ export default function Hero() {
           <p className="text-[10px] sm:text-xs font-[family-name:var(--font-dm-sans)] tracking-widest text-[#2563eb] uppercase mb-5 sm:mb-6">
             Business Improvement Engineer
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-snug md:leading-tight mb-6 sm:mb-8">
-            現場を知るエンジニアが、仕組みで課題を解決する。
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold leading-snug md:leading-tight mb-6 sm:mb-8">
+            現場を知るエンジニアが、
+            <br className="sm:hidden" />
+            仕組みで課題を解決する。
           </h1>
-          <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-8 max-w-xl">
-            製造現場での実務経験とエンジニアリングを掛け合わせ、
-            「現場が本当に使える」自動化・改善ツールを届けます。
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-8 max-w-xl tracking-tighter text-pretty">
+            製造現場での実務経験とエンジニアリングを掛け合わせ、「現場が本当に使える」自動化・改善ツールを届けます。
           </p>
           <a
             href="#problems"

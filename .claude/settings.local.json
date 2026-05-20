@@ -6,7 +6,21 @@
       "Bash(npx tsc *)",
       "Bash(git rm *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(npx --yes chromium-cli --version)",
+      "Bash(npx playwright *)",
+      "Bash(node \"C:\\\\Users\\\\maron\\\\AppData\\\\Local\\\\Temp\\\\screenshot-mobile.mjs\")",
+      "Bash(node screenshot-mobile.mjs)",
+      "Bash(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\maron\\\\OneDrive\\\\ドキュメント\\\\practice\\\\lp-mypage\\\\public\" -Force)",
+      "Bash(Copy-Item \"C:\\\\Users\\\\maron\\\\OneDrive\\\\ドキュメント\\\\practice\\\\lp-mypage\\\\plofile.png\" \"C:\\\\Users\\\\maron\\\\OneDrive\\\\ドキュメント\\\\practice\\\\lp-mypage\\\\public\\\\photo.png\")",
+      "Bash(mkdir -p \"C:/Users/maron/OneDrive/ドキュメント/practice/lp-mypage/public\")",
+      "Bash(cp \"C:/Users/maron/OneDrive/ドキュメント/practice/lp-mypage/plofile.png\" \"C:/Users/maron/OneDrive/ドキュメント/practice/lp-mypage/public/photo.png\")",
+      "Bash(node screenshot-hero.mjs)",
+      "Bash(python3 *)",
+      "Bash(Get-ChildItem -Force)",
+      "Bash(Select-Object Mode, LastWriteTime, Length, Name)"
     ]
   }
 }
