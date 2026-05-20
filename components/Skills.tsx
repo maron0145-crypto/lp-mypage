@@ -83,6 +83,7 @@ export default function Skills() {
                       <p className="font-medium text-gray-900 text-sm sm:text-base">
                         {skill.name}
                       </p>
+                        {/* モバイルは名前行の右端に、sm+ では名前の下に表示するため同じバーを2箇所に置く */}
                       <div className="sm:hidden">
                         <SkillBar level={skill.level} />
                       </div>

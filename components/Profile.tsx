@@ -57,6 +57,7 @@ export default function Profile() {
 
         {/* ── 自己紹介ブロック ── */}
         <details className="border-t border-gray-200 pt-10 md:pt-14 group">
+          {/* <details open> になると Tailwind の group-open: バリアントが有効になりラベルを切り替える */}
           <summary className="flex items-center justify-between cursor-pointer list-none">
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">自己紹介</h3>
             <span className="text-sm text-[#2563eb] font-medium select-none group-open:hidden">

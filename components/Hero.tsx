@@ -57,6 +57,7 @@ function ProblemCard({ p }: { p: Problem }) {
   );
 }
 
+// 負の剰余を避けるため +n してから %n し、n/2 を超えたら折り返して符号付きオフセットにする
 function circularOffset(i: number, current: number, n: number): number {
   const mod = ((i - current) % n + n) % n;
   return mod > n / 2 ? mod - n : mod;
@@ -76,6 +77,7 @@ function getCoverflowStyle(offset: number, cardWidth: number): React.CSSProperti
 
   const abs = Math.abs(offset);
   const sign = offset === 0 ? 0 : offset > 0 ? 1 : -1;
+  // 隣接カードの横移動量をカード幅の比率で決める。回転角と組み合わせて奥行き感を出す
   const near = Math.round(cardWidth * 0.75);
   const far = Math.round(cardWidth * 1.35);
 
@@ -135,6 +137,7 @@ export default function Hero() {
     else if (diff < -50) goTo(current - 1);
   };
 
+  // 極小画面でカードが潰れないよう高さの下限を300pxに固定する
   const coverflowHeight = cardWidth < 300 ? 300 : 320;
 
   return (
