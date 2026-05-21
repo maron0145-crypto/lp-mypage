@@ -1,3 +1,4 @@
+
 # 外山綾一 ポートフォリオサイト — CLAUDE.md
 
 ## プロジェクト概要
@@ -27,7 +28,8 @@ lp-mypage/
 │   ├── Hero.tsx            # ファーストビュー（LP コンセプト・課題解決）
 │   ├── Skills.tsx          # スキル一覧（バー表示）
 │   ├── Profile.tsx         # プロフィール・自己紹介（写真プレースホルダー付き）
-│   └── Footer.tsx          # 連絡先（Email・GitHub）
+│   ├── Contact.tsx         # 問い合わせ（メールリンク CTA）
+│   └── Footer.tsx          # コピーライト
 ├── next.config.ts
 ├── postcss.config.mjs
 ├── tsconfig.json
@@ -41,8 +43,9 @@ lp-mypage/
 |---|---|---|
 | 1 | `Hero` | キービジュアル / お悩みカード×4 / 解決策×3（ダミー） |
 | 2 | `Skills` | スキルバー（業務改善・自動化 / フロントエンド の2カテゴリ） |
-| 3 | `Profile` | 写真プレースホルダー + 名刺情報 / 自己紹介文・主な取り組み |
-| 4 | `Footer` | Email・GitHub リンク + コピーライト |
+| 3 | `Profile` | 写真 + 名刺情報 / 自己紹介文・主な取り組み |
+| 4 | `Contact` | 問い合わせ CTA（メールリンク・GitHub リンク） |
+| 5 | `Footer` | コピーライト |
 
 ## デザイン仕様
 
@@ -81,19 +84,15 @@ lp-mypage/
 
 5段階のドットバー（`SkillBar` コンポーネント）で表示。★ 表記は使わない。
 
-### 写真プレースホルダー
+### プロフィール写真
 
-`Profile.tsx` 内の `PhotoPlaceholder` コンポーネントを、写真用意後に以下で置き換える。
+`public/photo.png`（600×800px、3:4センタークロップ済み）を `next/image` の `fill` で表示。
 
-```tsx
-// 親 div の className はそのまま流用可
-<Image
-  src="/photo.jpg"
-  alt="外山 綾一"
-  fill
-  className="object-cover rounded-2xl"
-/>
-```
+### 問い合わせ（Contact セクション）
+
+- `id="contact"` の `<section>` として実装
+- メールリンク・GitHub リンクを CTA ボタン形式で並べる
+- サーバーコンポーネントのまま維持（フォーム送信機能は持たない）
 
 ## コーディング規約
 
